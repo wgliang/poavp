@@ -2,14 +2,17 @@
 import jieba # 非常不错的强大的中文分析工具
 import pickle
 import string
-
+import sys
+reload(sys) # Python2.5 初始化后会删除 sys.setdefaultencoding 这个方法，我们需要重新载入   
+sys.setdefaultencoding('utf-8')
 posdict = pickle.load(open('./lib/posdict.pkl', 'r'))
 negdict = pickle.load(open('./lib/negdict.pkl', 'r'))
 mostdict = pickle.load(open('./lib/most.pkl', 'r'))
 verydict = pickle.load(open('./lib/very.pkl', 'r'))
 moredict = pickle.load(open('./lib/more.pkl', 'r'))
 ishdict = pickle.load(open('./lib/ish.pkl', 'r'))
-
+insufficientdict = pickle.load(open('./lib/insufficiently.pkl', 'r'))
+inversedict = pickle.load(open('./lib/inverse.pkl', 'r'))
 
 def isOddEven(num):
     if num ^ 1 == 1:
@@ -22,31 +25,62 @@ def segmentation(sentence):
     # seg_list = jieba.cut(sentence, False) # 精确模式
     # seg_list = jieba.cut_for_search(sentence) # 搜索引擎模式
     # seg_result = ' '.join(seg_list)
-    return seg_list
+    return list(seg_list)
 
 def degreeAward(bite, score):
-    negation = 0
+    ation = 0
 
-    for b in bite:
-        if b in mostdict:
+    for word in bite:
+        k = 0
+        for key in mostdict:
+            key = key.replace('\n','')
+            if cmp(key,word) == 0:
+                print key,word
+                k = 1
+        for key in verydict:
+            key = key.replace('\n','')
+            if cmp(key,word) == 0:
+                print key,word
+                k = 2
+        for key in moredict:
+            key = key.replace('\n','')
+            if cmp(key,word) == 0:
+                print key,word
+                k = 3
+        for key in ishdict:
+            key = key.replace('\n','')
+            if cmp(key,word) == 0:
+                print key,word
+                k = 4
+        for key in insufficientdict:
+            key = key.replace('\n','')
+            if cmp(key,word) == 0:
+                print key,word
+                k = 5      
+        for key in insufficientdict:
+            key = key.replace('\n','')
+            if cmp(key,word) == 0:
+                print key,word
+                k = 6  
+
+        if k == 1:
             score *= 4.0
-        elif b in verydict:
+        elif k == 2:
             score *= 3.0
-        elif b in moredict:
+        elif k == 3:
             score *= 2.0
-        elif b in ishdict:
+        elif k == 4:
             score /= 2.0
-        elif b in insufficientdict:
+        elif k == 5:
             score /= 4.0
-        elif b in inversedict:
+        elif k == 6:
             ation += 1
 
-    return score,ationr
+    return (score,ation)
 
 
 def sentiment(sentence):
     words = segmentation(sentence)
-
     index = 0 # 当前词位置
     senpos = 0 # 上次情感词出现的位置
 
@@ -56,11 +90,24 @@ def sentiment(sentence):
     negscore = 0 # 消极词得分
     negscore2 = 0 # 消极词得分
     negscore3 = 0 # 消极词得分
+    k = 0
 
     for word in words:
-        if word in posdict:
+        for key in posdict:
+            key = key.replace('\n','')
+            if cmp(key,word) == 0:
+                print key,word
+                k = 1
+
+        for key in negdict:
+            key = key.replace('\n','')
+            if cmp(key,word) == 0:
+                print key,word
+                k = -1
+
+        if k == 1:
             posscore = posscore + 1
-            posscore,negation =  degreeAward(words[senpos:index])
+            (posscore,negation) =  degreeAward(words[senpos:index], posscore)
             if isOddEven(negation) == 'odd':
                 posscore *= -1.0
                 posscore2 += posscore
@@ -71,9 +118,9 @@ def sentiment(sentence):
                 posscore3 = posscore + posscore2 + posscore3
                 posscore = 0
             senpos = index + 1
-        elif word in negdict:
+        elif k == -1:
             negscore = negscore + 1
-            negscore,negation =  degreeAward(words[senneg:index])
+            (negscore,negation) =  degreeAward(words[senpos:index], negscore)
             if isOddEven(negation) == 'odd':
                 negscore *= -1.0
                 negscore2 += negscore
@@ -92,7 +139,7 @@ def sentiment(sentence):
                     break   
         index = index + 1
 
-    print posscore, negscore
+
     pos = 0
     neg = 0
     if posscore3 < 0 and negscore3 > 0:
@@ -110,4 +157,4 @@ def sentiment(sentence):
         
     return  pos,neg
 
-print sentiment("这个手机的质量还不错 极佳 极好，尤其是拍照功能")
+print sentiment("这个手机的质量还不错，尤其是拍照功能,但是这个相机不好,屏幕真是太烂了,非常不满意,很慢，很难用")
