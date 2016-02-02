@@ -33,32 +33,26 @@ def degreeAward(bite, score):
     for word in bite:
         k = 0
         for key in mostdict:
-            key = key.replace('\n','')
             if cmp(key,word) == 0:
                 print key,word
                 k = 1
         for key in verydict:
-            key = key.replace('\n','')
             if cmp(key,word) == 0:
                 print key,word
                 k = 2
         for key in moredict:
-            key = key.replace('\n','')
             if cmp(key,word) == 0:
                 print key,word
                 k = 3
         for key in ishdict:
-            key = key.replace('\n','')
             if cmp(key,word) == 0:
                 print key,word
                 k = 4
         for key in insufficientdict:
-            key = key.replace('\n','')
             if cmp(key,word) == 0:
                 print key,word
                 k = 5      
         for key in insufficientdict:
-            key = key.replace('\n','')
             if cmp(key,word) == 0:
                 print key,word
                 k = 6  
@@ -94,13 +88,11 @@ def sentiment(sentence):
 
     for word in words:
         for key in posdict:
-            key = key.replace('\n','')
             if cmp(key,word) == 0:
                 print key,word
                 k = 1
-
+        
         for key in negdict:
-            key = key.replace('\n','')
             if cmp(key,word) == 0:
                 print key,word
                 k = -1
@@ -134,14 +126,15 @@ def sentiment(sentence):
         elif word == '！'.decode('utf8') or word == '!'.decode('utf8'):
             for w in segtmp[::-1]: #扫描感叹号前的情感词，发现后权值+2，然后退出循环
                 if w in posdict or negdict:
-                    poscount3 += 2
-                    negcount3 += 2
+                    posscore3 += 2
+                    negscore3 += 2
                     break   
         index = index + 1
 
 
     pos = 0
     neg = 0
+    print posscore3, negscore3
     if posscore3 < 0 and negscore3 > 0:
         neg += negscore3 - posscore3
         pos = 0
