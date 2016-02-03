@@ -5,6 +5,7 @@ import string
 import sys
 reload(sys) # Python2.5 初始化后会删除 sys.setdefaultencoding 这个方法，我们需要重新载入   
 sys.setdefaultencoding('utf-8')
+
 posdict = pickle.load(open('./lib/posdict.pkl', 'r'))
 negdict = pickle.load(open('./lib/negdict.pkl', 'r'))
 mostdict = pickle.load(open('./lib/most.pkl', 'r'))
@@ -31,43 +32,23 @@ def degreeAward(bite, score):
     ation = 0
 
     for word in bite:
-        k = 0
-        for key in mostdict:
-            if cmp(key,word) == 0:
-                print key,word
-                k = 1
-        for key in verydict:
-            if cmp(key,word) == 0:
-                print key,word
-                k = 2
-        for key in moredict:
-            if cmp(key,word) == 0:
-                print key,word
-                k = 3
-        for key in ishdict:
-            if cmp(key,word) == 0:
-                print key,word
-                k = 4
-        for key in insufficientdict:
-            if cmp(key,word) == 0:
-                print key,word
-                k = 5      
-        for key in insufficientdict:
-            if cmp(key,word) == 0:
-                print key,word
-                k = 6  
-
-        if k == 1:
+        if str(word) in mostdict:
+            print word
             score *= 4.0
-        elif k == 2:
+        elif str(word) in verydict:
+            print word
             score *= 3.0
-        elif k == 3:
+        elif str(word) in moredict:
+            print word
             score *= 2.0
-        elif k == 4:
+        elif str(word) in ishdict:
+            print word
             score /= 2.0
-        elif k == 5:
+        elif str(word) in insufficientdict:
+            print word
             score /= 4.0
-        elif k == 6:
+        elif str(word) in inversedict:
+            print word
             ation += 1
 
     return (score,ation)
@@ -84,20 +65,11 @@ def sentiment(sentence):
     negscore = 0 # 消极词得分
     negscore2 = 0 # 消极词得分
     negscore3 = 0 # 消极词得分
-    k = 0
 
     for word in words:
-        for key in posdict:
-            if cmp(key,word) == 0:
-                print key,word
-                k = 1
         
-        for key in negdict:
-            if cmp(key,word) == 0:
-                print key,word
-                k = -1
-
-        if k == 1:
+        if str(word) in posdict:
+            print word
             posscore = posscore + 1
             (posscore,negation) =  degreeAward(words[senpos:index], posscore)
             if isOddEven(negation) == 'odd':
@@ -110,7 +82,8 @@ def sentiment(sentence):
                 posscore3 = posscore + posscore2 + posscore3
                 posscore = 0
             senpos = index + 1
-        elif k == -1:
+        elif str(word) in negdict:
+            print word
             negscore = negscore + 1
             (negscore,negation) =  degreeAward(words[senpos:index], negscore)
             if isOddEven(negation) == 'odd':
