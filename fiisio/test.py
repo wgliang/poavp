@@ -1,21 +1,32 @@
 # -*- coding: utf-8 -*-
 import fiisio
 import redis
-r = redis.Redis(host='localhost',port=6379,db=0)
+r = redis.Redis(host='114.215.85.245',port=6379,db=0)
 
-length = r.llen('comments-zhengshuang')
-for i in range(0,length):
-    if i == 7559:
-        continue
-    val = r.lindex('comments-zhengshuang',i)
+right = 0
+i = 4999
+while 1:
+    val = r.lindex('pingce-data',i)
+    da = r.lindex('pingce-answer',i)
+    start = da.find('=')
+    ans = str(da[(start+1):])
     if val != None:
         print val
         print "=============",i
         s = fiisio.Fiisio(val)
-    	num = s.sentiment
+        num = s.sentiment
         print val,num
-        r.lpush('result-zhengshuang2',val+'.'+str(num))
-
+        r.lpush('result-pingce',str(num))
+	if num - 0.5 > 0.0001:
+	    if int(ans) ==  1:
+	        right = right + 1
+	else:
+	    if int(ans) == -1:
+		right = right + 1
+    i = i -1
+    if i == -1:
+        break
+print right
 # from library import normal
 # from library import segmentation
 # from library import tagger

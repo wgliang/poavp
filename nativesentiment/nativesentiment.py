@@ -3,6 +3,7 @@ import jieba # 非常不错的强大的中文分析工具
 import pickle
 import string
 import sys
+import redis
 reload(sys) # Python2.5 初始化后会删除 sys.setdefaultencoding 这个方法，我们需要重新载入   
 sys.setdefaultencoding('utf-8')
 
@@ -123,4 +124,32 @@ def sentiment(sentence):
         
     return  pos,neg
 
-print sentiment("这个手机的质量还不错，尤其是拍照功能,但是这个相机不好,屏幕真是太烂了,非常不满意,很慢，很难用")
+#print sentiment("这个手机的质量还不错，尤其是拍照功能,但是这个相机不好,屏幕真是太烂了,非常不满意,很慢，很难用")
+
+r = redis.Redis(host='114.215.85.245',port=6379,db=0)
+count = 4999
+rpos = 0
+rneg = 0
+right = 0
+while 1:
+    print "===========",count
+    val = r.lindex('pingce-data',count)
+    data =  r.lindex('pingce-answer',count)
+    start = data.find('=')
+    v = int(data[(start+1):])
+    if val != None:
+        print val
+        pos,neg = sentiment(val)
+        print val,pos-neg
+        if pos - neg > 0:
+            if v == 1:
+                right = right + 1
+		rpos = rpos + 1
+        else:
+	    if v == -1:
+		rneg = rneg + 1
+                right = right + 1
+    count = count - 1
+    if count == -1:
+        break
+print rpos,rneg,right
