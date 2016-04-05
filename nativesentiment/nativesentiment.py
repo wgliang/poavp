@@ -141,7 +141,7 @@ while 1:
         print val
         pos,neg = sentiment(val)
         print val,pos-neg
-        if pos - neg > 0 and neg < 1:
+        if pos - neg > 2 and neg < 2:
             if v == 1:
                 right = right + 1
 		rpos = rpos + 1
