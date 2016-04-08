@@ -6,8 +6,8 @@ import pickle
 import pprint
 
 
-f = open("./lib/negdict.txt")
-p = file("./lib/negdict.pkl","w")
+f = open("./lib/posdict.txt")
+p = file("./lib/posdict.pkl","w")
 
 posdict = {}
 index = 0

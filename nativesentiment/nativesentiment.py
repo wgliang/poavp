@@ -34,22 +34,22 @@ def degreeAward(bite, score):
 
     for word in bite:
         if str(word) in mostdict:
-            print word
+            #print word
             score *= 4.0
         elif str(word) in verydict:
-            print word
+            #print word
             score *= 3.0
         elif str(word) in moredict:
-            print word
+            #print word
             score *= 2.0
         elif str(word) in ishdict:
-            print word
+            #print word
             score /= 2.0
         elif str(word) in insufficientdict:
-            print word
+            #print word
             score /= 4.0
         elif str(word) in inversedict:
-            print word
+            #print word
             ation += 1
 
     return (score,ation)
@@ -70,7 +70,7 @@ def sentiment(sentence):
     for word in words:
         
         if str(word) in posdict:
-            print word
+            #print word
             posscore = posscore + 1
             (posscore,negation) =  degreeAward(words[senpos:index], posscore)
             if isOddEven(negation) == 'odd':
@@ -84,7 +84,7 @@ def sentiment(sentence):
                 posscore = 0
             senpos = index + 1
         elif str(word) in negdict:
-            print word
+            #print word
             negscore = negscore + 1
             (negscore,negation) =  degreeAward(words[senpos:index], negscore)
             if isOddEven(negation) == 'odd':
@@ -108,7 +108,7 @@ def sentiment(sentence):
 
     pos = 0
     neg = 0
-    print posscore3, negscore3
+    #print posscore3, negscore3
     if posscore3 < 0 and negscore3 > 0:
         neg += negscore3 - posscore3
         pos = 0
@@ -131,25 +131,36 @@ count = 4999
 rpos = 0
 rneg = 0
 right = 0
+A = 0
+B = 0
+C = 0
+D = 0
+
 while 1:
-    print "===========",count
+    #print "===========",count
     val = r.lindex('pingce-data',count)
     data =  r.lindex('pingce-answer',count)
     start = data.find('=')
     v = int(data[(start+1):])
     if val != None:
-        print val
+        #print val
         pos,neg = sentiment(val)
-        print val,pos-neg
-        if pos - neg > 2 and neg < 2:
+        #print val,pos-neg
+        
+        if pos-neg < 4 or neg > 0:
+            C = C + 1
+            if v == -1:
+                D = D + 1
+                right = right + 1
+        else:
+            B = B + 1
             if v == 1:
                 right = right + 1
-		rpos = rpos + 1
-        else:
-	    if v == -1:
-		rneg = rneg + 1
-                right = right + 1
+                A = A + 1
     count = count - 1
     if count == -1:
         break
-print rpos,rneg,right
+#print A,B-A,C-D,D,right
+fo = open("res.txt", "a+")
+fo.write( "\nres:  pos-neg < 4 or neg > 0:" + ","+str(A) +","+ str(B-A) +","+ str(C-D) +","+ str(D)+","+ str(right)+"\n\n")
+fo.close()
