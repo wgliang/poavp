@@ -1,5 +1,5 @@
 # poavp
-Public opinion analysis visualization platform
+Study on disinhibition phenomena
 
 ## Part 1
 nativesentiment(朴素情感分析) 这是一个正在写的朴素的情感分析工具，说它朴素是因为在此只是从词的角度来分析情感，不使用任何已有的分类器和算法,它依据字典，结合程度词、感叹词等，通过建立的一个权值模型来决定句子中正面和负面情绪的得分，从而得出情感倾向.当然，它的准确性和健壮性与模型紧密相关，我会不断的优化.在此我认为任何分类算法和流行的机器学习只是来提高分析的准确性，一个好的字典才是关键
