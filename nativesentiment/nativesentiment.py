@@ -127,7 +127,7 @@ def sentiment(sentence):
 #print sentiment("这个手机的质量还不错，尤其是拍照功能,但是这个相机不好,屏幕真是太烂了,非常不满意,很慢，很难用")
 
 r = redis.Redis(host='114.215.85.245',port=6379,db=0)
-count = 4999
+count = 2723
 rpos = 0
 rneg = 0
 right = 0
@@ -138,29 +138,26 @@ D = 0
 
 while 1:
     #print "===========",count
-    val = r.lindex('pingce-data',count)
-    data =  r.lindex('pingce-answer',count)
-    start = data.find('=')
-    v = int(data[(start+1):])
+    val = r.lindex('comments-papi',count)
     if val != None:
         #print val
         pos,neg = sentiment(val)
         #print val,pos-neg
         
-        if pos-neg < 4 or neg > 0:
-            C = C + 1
-            if v == -1:
-                D = D + 1
+        if pos-neg > 0:
+            A = A + 1
+            if pos-neg > 4:
+                B = B + 1
                 right = right + 1
         else:
-            B = B + 1
-            if v == 1:
+            C = C + 1
+            if pos-neg < -2:
                 right = right + 1
-                A = A + 1
+                D = D + 1
     count = count - 1
     if count == -1:
         break
 #print A,B-A,C-D,D,right
-fo = open("res.txt", "a+")
-fo.write( "\nres:  pos-neg < 4 or neg > 0:" + ","+str(A) +","+ str(B-A) +","+ str(C-D) +","+ str(D)+","+ str(right)+"\n\n")
+fo = open("resp.txt", "a+")
+fo.write( "\nright res:  pos-neg > 5 or < -2:" + ","+str(A) +","+ str(B) +","+ str(C) +","+ str(D)+","+ str(right)+"\n\n")
 fo.close()

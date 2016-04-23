@@ -1,0 +1,27 @@
+
+right res:  pos-neg > 1 or < -1:,2345,2148,379,31,2179
+
+
+right res:  pos-neg > 3 or < -2:,2345,1727,379,13,1740
+
+
+right res:  pos-neg > 2 or < -1:,2345,1924,379,31,1955
+
+
+right res:  pos-neg > 3 or < -3:,2345,1727,379,4,1731
+
+
+right res:  pos-neg > 2 or < -2:,2345,1924,379,13,1937
+
+
+right res:  pos-neg > 5 or < -2:,2345,1377,379,13,1390
+
+
+right res:  pos-neg > 5 or < -2:,2345,1537,379,13,1550
+
+
+right res:  pos-neg > 4 or < -1:,2345,1537,379,31,1568
+
+
+right res:  pos-neg > 5 or < -1:,2345,1377,379,31,1408
+

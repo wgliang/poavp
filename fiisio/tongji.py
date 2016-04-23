@@ -3,7 +3,7 @@ import fiisio
 import redis
 
 r = redis.Redis(host='114.215.85.245',port=6379,db=0)
-count = 4999
+count = 2723
 rpos = 0
 rneg = 0
 right = 0
@@ -11,38 +11,34 @@ A = 0
 B = 0
 C = 0
 D = 0
-
+#fop = open("res_papi.txt", "a+")
 while 1:
     #print "===========",count
-    val = r.lindex('pingce-data',count)
-    #print val
-    data =  r.lindex('pingce-answer',count)
-    #print data
-    start = data.find('=')
-    v = int(data[(start+1):])
+    #val = r.lindex('pingce-data',count)
+    val = r.lindex('result-papi',count)
+    print val
+    #fop.write(val+"\n")
     if val != None:
         #print vali
-        s = fiisio.Fiisio(val)
-        num = s.sentiment
-        #print num
-        if num > 0.503:
-            C = C + 1
-            if v == -1:
-                D = D + 1
+        num = float(val)
+        if num > 0.498 or num == 0.498:
+            A = A + 1
+            if num > 0.5:
+                B = B + 1
                 right = right + 1
         else:
-            B = B + 1
-            if v == 1:
+            C = C + 1
+            if num < 0.496:
                 right = right + 1
-                A = A + 1
+                D = D + 1
     count = count - 1
     if count == -1:
         break
 #print A,B-A,C-D,D,right
-fo = open("res.txt", "a+")
-fo.write( "\nres:  num > 0.503:" + ","+str(A) +","+ str(B-A) +","+ str(C-D) +","+ str(D)+","+ str(right)+"\n\n")
+fo = open("resp.txt", "a+")
+fo.write( "\nres:  num > 0.4999 < 0.4969:" + ","+str(A) +","+ str(B) +","+ str(C) +","+ str(D)+","+ str(right)+"\n\n")
 fo.close()
-
+#fop.close()
 
 # from library import normal
 # from library import segmentation
